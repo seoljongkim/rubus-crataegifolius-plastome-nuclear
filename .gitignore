@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.DS_Store
+*.swp
+
+# 분석 산출물 (저장소에는 코드만 둔다)
+*.fasta
+*.fa
+*.fastq
+*.fastq.gz
+*.bam
+*.bai
+*.vcf
+*.vcf.gz
+*.gb
+*.tsv
+*.csv
+*.mdist
+*.treefile
+*.png
+*.pdf
+*.tif
