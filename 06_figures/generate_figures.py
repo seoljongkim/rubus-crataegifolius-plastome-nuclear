@@ -19,10 +19,7 @@ import matplotlib.patches as mpatches
 import matplotlib.gridspec as gridspec
 from collections import defaultdict
 
-BASE = os.environ.get("RUBUS_BASE",
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
-OUT_DIR = f'{BASE}/figures'
+OUT_DIR = '/home/spenkim/rubus_cp/figures'
 os.makedirs(OUT_DIR, exist_ok=True)
 
 VARIETIES = ['DAHE', 'DAHO', 'DB', 'DS', 'GDC', 'GDM', 'GDW', 'HGB']
@@ -30,6 +27,12 @@ ALL_10 = ['DAHE', 'DAHO', 'DB', 'DS', 'GB048', 'GB066', 'GDC', 'GDM', 'GDW', 'HG
 VARIETY_LABELS = {
     'DAHE': 'DAHK_2', 'DAHO': 'DAH_B1', 'DB': 'DB_A1', 'DS': 'DS_A1',
     'GDC': 'GDCH_1', 'GDM': 'GDM_A1', 'GDW': 'GDW_5', 'HGB': 'HGB_A1'
+}
+
+# 품종명 (그림 표시용)
+CULTIVAR = {
+    'DAHE': 'Dongakheuk', 'DAHO': 'Dongakhong', 'DB': 'Dabok', 'DS': 'Daesung',
+    'GDC': 'Geumdongcheon', 'GDM': 'Goldmoon', 'GDW': 'Geumdongwang', 'HGB': 'Hwangeumboll'
 }
 
 COLORS = {
@@ -46,7 +49,7 @@ COLORS = {
 def fig2_rscu():
     print("Generating Fig 2: RSCU bar chart...")
     codons, amino_acids, data = [], [], []
-    with open(f'{BASE}/rscu_output/rscu_all_varieties.csv') as f:
+    with open('/home/spenkim/rubus_cp/rscu_output/rscu_all_varieties.csv') as f:
         for row in csv.DictReader(f):
             if row['AminoAcid'] in ('*', 'Stop'):
                 continue
@@ -60,10 +63,10 @@ def fig2_rscu():
            color=['#E53935' if d > 1 else '#1976D2' for d in data],
            edgecolor='white', linewidth=0.3)
     ax.set_xticks(range(n))
-    ax.set_xticklabels([f"{c}\n({a})" for a, c in zip(amino_acids, codons)],
-                       fontsize=5, rotation=90, ha='center')
+    ax.set_xticklabels([f"{c} ({a})" for a, c in zip(amino_acids, codons)],
+                       fontsize=8, rotation=60, ha='right', rotation_mode='anchor')
     ax.set_ylabel('RSCU Value', fontsize=12)
-    ax.set_title('Relative Synonymous Codon Usage (RSCU) - DAH_B1 (Representative)', fontsize=14)
+    ax.set_title(f"Relative Synonymous Codon Usage (RSCU) - '{CULTIVAR['DAHO']}' (representative)", fontsize=14)
     ax.axhline(y=1, color='black', linestyle='--', linewidth=0.8, alpha=0.5)
     ax.set_xlim(-0.5, n - 0.5)
     ax.legend(handles=[
@@ -85,7 +88,7 @@ def fig3_ssr():
     ssr_type_counts = {}
     for v in VARIETIES:
         ssr_type_counts[v] = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0}
-        with open(f'{BASE}/misa_output/{v}_std.fasta.statistics') as f:
+        with open(f'/home/spenkim/rubus_cp/misa_output/{v}_std.fasta.statistics') as f:
             in_dist = False
             for line in f:
                 line = line.strip()
@@ -150,7 +153,7 @@ def fig4_repeat():
     trf_lengths = {}
     for v in VARIETIES:
         trf_lengths[v] = []
-        with open(f'{BASE}/trf_output/{v}_std.fasta.2.7.7.80.10.50.500.dat', 'rb') as f:
+        with open(f'/home/spenkim/rubus_cp/trf_output/{v}_std.fasta.2.7.7.80.10.50.500.dat', 'rb') as f:
             content = f.read().decode('utf-8', errors='ignore')
         for line in content.split('\n'):
             parts = line.strip().split()
@@ -162,7 +165,7 @@ def fig4_repeat():
 
     # Dispersed repeats
     disp_type = {}; disp_size = {}
-    with open(f'{BASE}/reputer_output/dispersed_repeat_summary.tsv') as f:
+    with open('/home/spenkim/rubus_cp/reputer_output/dispersed_repeat_summary.tsv') as f:
         content = f.read()
     sections = content.split('===')
     for i, sec in enumerate(sections):
@@ -242,7 +245,7 @@ def fig4_repeat():
 def fig5_irscope():
     print("Generating Fig 5: IR boundary comparison...")
     ir_data = {}
-    with open(f'{BASE}/irscope_output/ir_boundary_genes.csv') as f:
+    with open('/home/spenkim/rubus_cp/irscope_output/ir_boundary_genes.csv') as f:
         for row in csv.DictReader(f):
             v = row['Variety']
             if v not in VARIETIES:
@@ -284,7 +287,7 @@ def fig5_irscope():
     for vi, v in enumerate(VARIETIES):
         y_base = (n_var - 1 - vi) * 8 + 2
         label = VARIETY_LABELS.get(v, v)
-        ax.text(-1, y_base+1, f'{v} ({label})', ha='right', va='center', fontsize=8, fontweight='bold')
+        ax.text(-1, y_base+1, f"'{CULTIVAR.get(v, v)}'", ha='right', va='center', fontsize=8, fontweight='bold')
 
         for name, x1, x2 in regions:
             ax.add_patch(plt.Rectangle((x1, y_base), x2-x1, 2,
@@ -345,7 +348,7 @@ def fig6_variant():
     # We need to re-parse from all_variants.csv and check if variant still exists
     # for 8 varieties
     valid_variants = []
-    with open(f'{BASE}/variant_output/all_variants.csv') as f:
+    with open('/home/spenkim/rubus_cp/variant_output/all_variants.csv') as f:
         for row in csv.DictReader(f):
             details = row['Details']
             vtype = row['Type']
@@ -424,7 +427,7 @@ def fig6_variant():
     # Re-parse from variant_summary.txt (the original 10x10 matrix)
     snp_matrix_10 = {}
     matrix_vars_10 = []
-    with open(f'{BASE}/variant_output/variant_summary.txt') as f:
+    with open('/home/spenkim/rubus_cp/variant_output/variant_summary.txt') as f:
         content = f.read()
     in_matrix = False
     for line in content.split('\n'):
