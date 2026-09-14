@@ -22,7 +22,8 @@ from collections import defaultdict
 OUT_DIR = '/home/spenkim/rubus_cp/figures'
 os.makedirs(OUT_DIR, exist_ok=True)
 
-VARIETIES = ['DAHE', 'DAHO', 'DB', 'DS', 'GDC', 'GDM', 'GDW', 'HGB']
+# 품종명 알파벳 순 (그림 표시 순서와 동일)
+VARIETIES = ['DB', 'DS', 'DAHE', 'DAHO', 'GDC', 'GDW', 'GDM', 'HGB']
 ALL_10 = ['DAHE', 'DAHO', 'DB', 'DS', 'GB048', 'GB066', 'GDC', 'GDM', 'GDW', 'HGB']
 VARIETY_LABELS = {
     'DAHE': 'DAHK_2', 'DAHO': 'DAH_B1', 'DB': 'DB_A1', 'DS': 'DS_A1',
@@ -436,7 +437,9 @@ def fig6_variant():
         if in_matrix:
             line = line.strip()
             parts = line.split()
-            if parts and parts[0] in ALL_10:
+            # 헤더 줄(품종명만 나열)이 데이터 행으로 잡히면 열 인덱스가 한 칸 밀린다 → 숫자/— 가 뒤따를 때만 행으로 인정
+            if parts and parts[0] in ALL_10 and len(parts) > 1 and (
+                    parts[1] == '—' or parts[1].lstrip('-').isdigit()):
                 var_name = parts[0]
                 vals = []
                 for p in parts[1:]:
@@ -464,11 +467,11 @@ def fig6_variant():
     region_sizes = {'LSC': 85374, 'IRb': 25786, 'SSC': 18718, 'IRa': 25786}
 
     # --- PLOTTING ---
-    fig = plt.figure(figsize=(18, 8))
-    gs = gridspec.GridSpec(1, 3, width_ratios=[1, 1, 1.3], wspace=0.35)
+    fig = plt.figure(figsize=(16, 8))
+    gs = gridspec.GridSpec(2, 2, width_ratios=[1, 1.25], hspace=0.55, wspace=0.28)
 
     # (A) Variants by region
-    ax1 = fig.add_subplot(gs[0])
+    ax1 = fig.add_subplot(gs[0, 0])
     regions_order = ['LSC', 'IRb', 'SSC', 'IRa']
     x = np.arange(4); w = 0.25
     snps = [region_counts[r]['SNP'] for r in regions_order]
@@ -484,31 +487,36 @@ def fig6_variant():
     ax1.set_title('(A) Variants by Genome Region', fontsize=12)
     ax1.legend(fontsize=9)
 
+    # 라벨은 막대 위에 — total(세 유형 합)을 쓰면 y축 범위를 넘어 축 밖으로 나간다
+    tallest = max(max(snps), max(indels), max(cmplx))
+    ax1.set_ylim(0, tallest * 1.18)
     for i, r in enumerate(regions_order):
         total = region_counts[r]['SNP'] + region_counts[r]['InDel'] + region_counts[r]['Complex']
         per_kb = total / (region_sizes[r] / 1000)
-        ax1.text(i, total+5, f'{per_kb:.2f}/kb', ha='center', va='bottom', fontsize=8, color='gray')
+        top = max(snps[i], indels[i], cmplx[i])
+        ax1.text(i, top + tallest * 0.02, f'{per_kb:.2f}/kb', ha='center', va='bottom',
+                 fontsize=8, color='gray')
 
     # (B) Private variants
-    ax2 = fig.add_subplot(gs[1])
+    ax2 = fig.add_subplot(gs[1, 0])
     x2 = np.arange(n8); w2 = 0.35
     ps = [private_vars[v]['SNPs'] for v in VARIETIES]
     pi = [private_vars[v]['InDels'] for v in VARIETIES]
     ax2.bar(x2 - w2/2, ps, w2, label='Private SNPs', color=COLORS['SNP'])
     ax2.bar(x2 + w2/2, pi, w2, label='Private InDels', color=COLORS['InDel'])
     ax2.set_xticks(x2)
-    ax2.set_xticklabels(VARIETIES, rotation=45, ha='right', fontsize=9)
+    ax2.set_xticklabels([CULTIVAR[v] for v in VARIETIES], rotation=45, ha='right', fontsize=9)
     ax2.set_ylabel('Number of Private Variants', fontsize=11)
     ax2.set_title('(B) Private Variants per Variety', fontsize=12)
     ax2.legend(fontsize=9)
 
     # (C) Pairwise SNP heatmap
-    ax3 = fig.add_subplot(gs[2])
+    ax3 = fig.add_subplot(gs[:, 1])
     im = ax3.imshow(matrix_8, cmap='YlOrRd', aspect='equal')
     ax3.set_xticks(range(n8))
     ax3.set_yticks(range(n8))
-    ax3.set_xticklabels(VARIETIES, rotation=45, ha='right', fontsize=9)
-    ax3.set_yticklabels(VARIETIES, fontsize=9)
+    ax3.set_xticklabels([CULTIVAR[v] for v in VARIETIES], rotation=45, ha='right', fontsize=9)
+    ax3.set_yticklabels([CULTIVAR[v] for v in VARIETIES], fontsize=9)
     ax3.set_title('(C) Pairwise SNP Counts', fontsize=12)
     for i in range(n8):
         for j in range(n8):
