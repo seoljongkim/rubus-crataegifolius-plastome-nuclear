@@ -10,10 +10,15 @@ from scipy.spatial.distance import squareform
 from scipy.stats import spearmanr
 import numpy as _np
 
+import os
+
+BASE = os.environ.get("RUBUS_BASE",
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 K=f"{BASE}/kaks_output"; OUT=f"{BASE}/figures_revision"
 VARS=["DAHE","DAHO","DB","DS","GDC","GDM","GDW","HGB"]
-FULL={"DAHE":"'Dongakheuk'","DAHO":"'Dongakhong'","DB":"'Dabok'","DS":"'Daesung'",
-      "GDC":"'Geumdongcheon'","GDM":"'Goldmoon'","GDW":"'Geumdongwang'","HGB":"'Hwangeumboll'"}
+FULL={"DAHE":"Dongakheuk","DAHO":"Dongakhong","DB":"Dabok","DS":"Daesung",
+      "GDC":"Geumdongcheon","GDM":"Goldmoon","GDW":"Geumdongwang","HGB":"Hwangeumboll"}
 GROUP={"DAHE":"A","DAHO":"A","GDW":"A","DB":"B","GDC":"B","DS":"–","GDM":"–","HGB":"–"}
 NPG=["#E64B35","#4DBBD5","#00A087","#3C5488","#F39B7F","#8491B4"]
 
@@ -39,8 +44,8 @@ for i in range(8):
                 color="white" if v>nuc.max()*0.82 else "black")
     ax.text(i,i,"—",ha="center",va="center",color="#999999")
 ax.set_xticks(range(8)); ax.set_yticks(range(8))
-ax.set_xticklabels(VARS,rotation=45,ha="right",fontsize=10)
-ax.set_yticklabels(VARS,fontsize=10)
+ax.set_xticklabels([FULL[v] for v in VARS],rotation=45,ha="right",fontsize=9)
+ax.set_yticklabels([FULL[v] for v in VARS],fontsize=9)
 # cp 동일 그룹 쌍에 테두리
 for i,j in itertools.combinations(range(8),2):
     if cp[i,j]==0:
@@ -61,10 +66,13 @@ ax.scatter(x[~same],y[~same],s=62,color=NPG[3],alpha=.82,edgecolor="white",lw=.8
            label="cp-divergent pairs",zorder=3)
 ax.scatter(x[same],y[same],s=110,color=NPG[0],edgecolor="black",lw=1.0,marker="D",
            label="identical cp genomes (0 SNPs)",zorder=4)
-for a,b in zip(*iu):
-    if cp[a,b]==0:
-        ax.annotate(f"{VARS[a]}–{VARS[b]}",(cp[a,b],nuc[a,b]),textcoords="offset points",
-                    xytext=(9,-1),fontsize=8.6,color=NPG[0])
+# cp 동일 쌍 주석: 풀네임이라 라벨이 길어져, 거리순으로 위·아래 번갈아 배치해 겹침을 피한다
+_id_pairs=sorted([(a,b) for a,b in zip(*iu) if cp[a,b]==0],key=lambda t:nuc[t])
+for _k,(a,b) in enumerate(_id_pairs):
+    ax.annotate(f"{FULL[VARS[a]]}–{FULL[VARS[b]]}",(cp[a,b],nuc[a,b]),
+                textcoords="offset points",xytext=(11,7 if _k%2 else -12),
+                fontsize=8.2,color=NPG[0])
+ax.set_ylim(ax.get_ylim()[0]-0.008,ax.get_ylim()[1])   # 아래쪽 라벨이 축선에 닿지 않도록
 rho,_=spearmanr(x,y)
 _rng=_np.random.default_rng(20260818); _N=99999; _c=0
 for _ in range(_N):
@@ -96,10 +104,6 @@ ax.set_title("(C)  UPGMA clustering (nuclear SNPs)",loc="left",fontsize=13,fontw
 ax.yaxis.tick_right()
 for s in ("top","right","left"): ax.spines[s].set_visible(False)
 from matplotlib.lines import Line2D
-import os
-
-BASE = os.environ.get("RUBUS_BASE",
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 ax.legend(handles=[Line2D([],[],color=NPG[0],lw=3,label="cp haplotype group A"),
                    Line2D([],[],color=NPG[2],lw=3,label="cp haplotype group B"),
                    Line2D([],[],color="#555555",lw=3,label="unique cp haplotype")],

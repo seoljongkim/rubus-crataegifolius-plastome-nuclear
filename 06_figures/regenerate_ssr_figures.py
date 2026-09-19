@@ -7,6 +7,9 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
+BASE = os.environ.get("RUBUS_BASE",
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 SRC = f"{BASE}/home_wsl_package/misa_new"
 OUT = f"{BASE}/figures_revision"
 os.makedirs(OUT, exist_ok=True)
@@ -92,9 +95,6 @@ plt.close(fig)
 
 # Fig2A TIFF (pptx 삽입용, 원본과 동일 종횡비 유지)
 from PIL import Image as _Im
-
-BASE = os.environ.get("RUBUS_BASE",
-    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 _Im.open(f"{OUT}/Fig2A_SSR_type.png").convert("RGB").save(f"{OUT}/Fig2A_SSR_type.tiff", compression="tiff_lzw")
 for f in ("Fig2A_SSR_type.tiff","Fig2B_pie.tiff","Fig2B_legend.tiff"):
     im=_Im.open(f"{OUT}/{f}"); print(f"  {f}: {im.size} 비율 {im.size[0]/im.size[1]:.3f}")
