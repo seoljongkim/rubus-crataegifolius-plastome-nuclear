@@ -18,7 +18,7 @@ script expects the directory layout of the original analysis (see *Paths*).
 | 2 | `02_cp_analysis/` | Variant detection from the MAFFT alignment (`structural_variant_analysis.py`), SSR (MISA, conservative thresholds), tandem and dispersed repeats, RSCU, IR boundaries |
 | 3 | `03_selection/` | Length-normalised substitution rates and Nei–Gojobori Ka/Ks, within cultivars and against three congeners |
 | 4 | `04_phylogeny/` | ML tree figure from the IQ-TREE output (21 taxa, TVM+F+R3) |
-| 5 | `05_nuclear/` | Reference comparison, mapping and joint SNP calling, marker panel selection, distance robustness checks |
+| 5 | `05_nuclear/` | Reference comparison, mapping and joint SNP calling, marker panel selection, distance robustness checks; heterozygosity QC / strict SNP set and panel re-check added at revision (`08_`, `09_`) |
 | 6 | `06_figures/` | Figure generation |
 | 7 | `07_its_leafy/` | nrDNA ITS assembly, read-level check and ML tree figure. The LEAFY intron 2 check reported in the Discussion was run interactively and has no script here; its inputs and alignments are described in Supplementary Note 2 |
 
@@ -69,3 +69,8 @@ Biopython v1.86, SciPy.
   differences and are removed (`plink2 --mac 1`) before distance estimation.
 - 1 − IBS distances depend on heterozygosity; `07_distance_robustness.py` repeats the analysis on
   homozygous-only sites and checks for confounding by depth and mapping rate.
+- Revision (Genes R1): `08_het_qc.py` tabulates heterozygous calls by mapping quality, depth and allele
+  balance and writes the strict SNP set (MQ ≥ 50, per-sample depth 8–40×, allele balance 0.2–0.8, no
+  missing genotype); `09_panel_strict_check.py` re-checks the marker panel against that set. RcNu-04 of
+  the original submission failed the check and was replaced by OZ232403.1:12,029,618 (same genotype
+  pattern); `06_marker_selection.py` therefore reproduces the original panel, not the revised one.
