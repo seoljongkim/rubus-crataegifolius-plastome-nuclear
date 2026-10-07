@@ -58,14 +58,14 @@ ax.axis("equal")
 # labels outside the pie with leader lines (no separate legend needed)
 import math
 for wd, i in zip(w, keep):
-    ang = math.radians((wd.theta1 + wd.theta2) / 2)
-    if LABEL[i] == "Penta": ang = math.radians(97)      # nudge the 0.7 % wedge label clear of 'Tetra'
-    x, y = math.cos(ang), math.sin(ang)
-    ha = "left" if x >= 0 else "right"
-    ax.annotate(f"{LABEL[i]} {pct[i]:.1f}%", xy=(0.96*x, 0.96*y), xytext=(1.32*x, 1.28*y),
+    ang = math.radians((wd.theta1 + wd.theta2) / 2)          # true mid-angle of the wedge (anchor)
+    tang = math.radians(70) if LABEL[i] == "Penta" else ang   # text of the 0.7 % wedge nudged clear of 'Tetra'
+    x, y = math.cos(ang), math.sin(ang); tx, ty = math.cos(tang), math.sin(tang)
+    ha = "left" if tx >= 0 else "right"
+    ax.annotate(f"{LABEL[i]} {pct[i]:.1f}%", xy=(0.97*x, 0.97*y), xytext=(1.32*tx, 1.28*ty),
                 ha=ha, va="center", fontsize=20,
                 arrowprops=dict(arrowstyle="-", color="#555555", lw=1.0,
-                                connectionstyle=f"angle,angleA=0,angleB={math.degrees(ang):.0f}"))
+                                connectionstyle=f"angle,angleA=0,angleB={math.degrees(tang):.0f}"))
 ax.text(0, -1.42, f"Hexa 0.0% (none detected)", ha="center", va="top", fontsize=17, color="#555555")
 ax.set_xlim(-1.9, 1.9); ax.set_ylim(-1.55, 1.45)
 plt.tight_layout()
