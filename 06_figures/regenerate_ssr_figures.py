@@ -51,15 +51,23 @@ fig.savefig(f"{OUT}/Fig2A_SSR_type.pdf", bbox_inches="tight"); plt.close(fig)
 avg = np.array([np.mean([counts[v][i] for v in ORDER]) for i in range(6)])
 pct = 100 * avg / avg.sum()
 keep = [i for i in range(6) if avg[i] > 0]          # hexa는 0건이라 파이에서 제외
-fig, ax = plt.subplots(figsize=(6.6, 7.6))
-w, _, at = ax.pie(avg[keep], colors=[NPG[i] for i in keep], startangle=90,
-                  autopct=lambda p: f"{p:.1f}%" if p >= 3 else "",
-                  pctdistance=0.72, wedgeprops={"edgecolor":"white","linewidth":1.2},
-                  textprops={"fontsize":20})
+fig, ax = plt.subplots(figsize=(7.4, 6.3))
+w, _ = ax.pie(avg[keep], colors=[NPG[i] for i in keep], startangle=90, counterclock=False,
+              wedgeprops={"edgecolor":"white","linewidth":1.5}, radius=1.0)
 ax.axis("equal")
-handles = [Patch(facecolor=NPG[i], label=f"{LABEL[i]} ({pct[i]:.1f}%)") for i in range(6)]
-ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 0.02),
-          ncol=3, fontsize=19, frameon=True, handlelength=1.4, columnspacing=1.2)
+# labels outside the pie with leader lines (no separate legend needed)
+import math
+for wd, i in zip(w, keep):
+    ang = math.radians((wd.theta1 + wd.theta2) / 2)
+    if LABEL[i] == "Penta": ang = math.radians(97)      # nudge the 0.7 % wedge label clear of 'Tetra'
+    x, y = math.cos(ang), math.sin(ang)
+    ha = "left" if x >= 0 else "right"
+    ax.annotate(f"{LABEL[i]} {pct[i]:.1f}%", xy=(0.96*x, 0.96*y), xytext=(1.32*x, 1.28*y),
+                ha=ha, va="center", fontsize=20,
+                arrowprops=dict(arrowstyle="-", color="#555555", lw=1.0,
+                                connectionstyle=f"angle,angleA=0,angleB={math.degrees(ang):.0f}"))
+ax.text(0, -1.42, f"Hexa 0.0% (none detected)", ha="center", va="top", fontsize=17, color="#555555")
+ax.set_xlim(-1.9, 1.9); ax.set_ylim(-1.55, 1.45)
 plt.tight_layout()
 fig.savefig(f"{OUT}/Fig2B_SSR_proportion.png", dpi=300, bbox_inches="tight")
 fig.savefig(f"{OUT}/Fig2B_SSR_proportion.pdf", bbox_inches="tight"); plt.close(fig)
