@@ -482,10 +482,10 @@ def fig6_variant():
     ax1.bar(x, indels, w, label='InDels', color=COLORS['InDel'])
     ax1.bar(x+w, cmplx, w, label='Complex', color=COLORS['Complex'])
     ax1.set_xticks(x)
-    ax1.set_xticklabels(regions_order, fontsize=10)
-    ax1.set_ylabel('Number of Variants', fontsize=11)
-    ax1.set_title('(A) Variants by Genome Region', fontsize=12)
-    ax1.legend(fontsize=9)
+    ax1.set_xticklabels(regions_order, fontsize=13)
+    ax1.set_ylabel('Number of variants', fontsize=14)
+    ax1.set_title('(a) Variants by genome region', fontsize=15, loc='left', fontweight='bold')
+    ax1.legend(fontsize=12)
 
     # 라벨은 막대 위에 — total(세 유형 합)을 쓰면 y축 범위를 넘어 축 밖으로 나간다
     tallest = max(max(snps), max(indels), max(cmplx))
@@ -495,7 +495,7 @@ def fig6_variant():
         per_kb = total / (region_sizes[r] / 1000)
         top = max(snps[i], indels[i], cmplx[i])
         ax1.text(i, top + tallest * 0.02, f'{per_kb:.2f}/kb', ha='center', va='bottom',
-                 fontsize=8, color='gray')
+                 fontsize=11, color='gray')
 
     # (B) Private variants
     ax2 = fig.add_subplot(gs[1, 0])
@@ -505,26 +505,26 @@ def fig6_variant():
     ax2.bar(x2 - w2/2, ps, w2, label='Private SNPs', color=COLORS['SNP'])
     ax2.bar(x2 + w2/2, pi, w2, label='Private InDels', color=COLORS['InDel'])
     ax2.set_xticks(x2)
-    ax2.set_xticklabels([CULTIVAR[v] for v in VARIETIES], rotation=45, ha='right', fontsize=9)
-    ax2.set_ylabel('Number of Private Variants', fontsize=11)
-    ax2.set_title('(B) Private Variants per Variety', fontsize=12)
-    ax2.legend(fontsize=9)
+    ax2.set_xticklabels([CULTIVAR[v] for v in VARIETIES], rotation=45, ha='right', fontsize=12)
+    ax2.set_ylabel('Number of private variants', fontsize=14)
+    ax2.set_title('(b) Private variants per cultivar', fontsize=15, loc='left', fontweight='bold')
+    ax2.legend(fontsize=12)
 
     # (C) Pairwise SNP heatmap
     ax3 = fig.add_subplot(gs[:, 1])
     im = ax3.imshow(matrix_8, cmap='YlOrRd', aspect='equal')
     ax3.set_xticks(range(n8))
     ax3.set_yticks(range(n8))
-    ax3.set_xticklabels([CULTIVAR[v] for v in VARIETIES], rotation=45, ha='right', fontsize=9)
-    ax3.set_yticklabels([CULTIVAR[v] for v in VARIETIES], fontsize=9)
-    ax3.set_title('(C) Pairwise SNP Counts', fontsize=12)
+    ax3.set_xticklabels([CULTIVAR[v] for v in VARIETIES], rotation=45, ha='right', fontsize=12)
+    ax3.set_yticklabels([CULTIVAR[v] for v in VARIETIES], fontsize=12)
+    ax3.set_title('(c) Pairwise SNP counts', fontsize=15, loc='left', fontweight='bold')
     for i in range(n8):
         for j in range(n8):
             val = int(matrix_8[i][j])
             color = 'white' if val > 200 else 'black'
-            ax3.text(j, i, str(val), ha='center', va='center', fontsize=7, color=color)
+            ax3.text(j, i, str(val), ha='center', va='center', fontsize=11, color=color)
     cbar = plt.colorbar(im, ax=ax3, fraction=0.046, pad=0.04)
-    cbar.set_label('SNP Count', fontsize=10)
+    cbar.set_label('SNP count', fontsize=13)
 
     plt.savefig(os.path.join(OUT_DIR, 'Fig6_Variant.png'), dpi=300, bbox_inches='tight')
     plt.savefig(os.path.join(OUT_DIR, 'Fig6_Variant.pdf'), bbox_inches='tight')

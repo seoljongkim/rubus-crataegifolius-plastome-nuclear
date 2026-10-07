@@ -20,7 +20,7 @@ NPG   = ["#E64B35", "#4DBBD5", "#00A087", "#3C5488", "#F39B7F", "#8491B4"]
 NAME  = {"DB":"Dabok","DS":"Daesung","DAHE":"Dongakheuk","DAHO":"Dongakhong",
          "GDC":"Geumdongcheon","GDW":"Geumdongwang","GDM":"Goldmoon","HGB":"Hwangeumboll"}
 ORDER = ["DB","DS","DAHE","DAHO","GDC","GDW","GDM","HGB"]
-plt.rcParams.update({"font.family":"serif","font.size":13,
+plt.rcParams.update({"font.family":"serif","font.size":22,
                      "axes.spines.top":False,"axes.spines.right":False})
 
 # ---------------- 데이터 ----------------
@@ -50,12 +50,12 @@ for i,(lab,lo,hi) in enumerate(TCLS):
     ax.bar(x, vals, 0.62, bottom=bottom, color=NPG[i], edgecolor="white", linewidth=0.6, label=lab)
     bottom += vals
 for i, tot in enumerate(bottom):
-    ax.text(i, tot + 0.7, str(int(tot)), ha="center", va="bottom", fontsize=12, fontweight="bold")
+    ax.text(i, tot + 0.7, str(int(tot)), ha="center", va="bottom", fontsize=20, fontweight="bold")
 ax.set_xticks(x); ax.set_xticklabels([NAME[v] for v in ORDER], rotation=45, ha="right")
-ax.set_ylabel("Number of tandem repeats", fontsize=15)
-ax.set_ylim(0, max(bottom)*1.18)
+ax.set_ylabel("Tandem repeats", fontsize=24)
+ax.set_ylim(0, max(bottom)*1.42)
 ax.legend(handles=[Patch(facecolor=NPG[i], label=l) for i,(l,_,_) in enumerate(TCLS)],
-          loc="upper center", bbox_to_anchor=(0.5,-0.28), ncol=4, fontsize=12, frameon=False)
+          loc="upper center", bbox_to_anchor=(0.5,1.0), ncol=4, fontsize=18, frameon=False, handlelength=1.2, columnspacing=1.0, handletextpad=0.5)
 plt.tight_layout()
 fig.savefig(f"{OUT}/Fig2C_tandem_length.png", dpi=300, bbox_inches="tight")
 fig.savefig(f"{OUT}/Fig2C_tandem_length.pdf", bbox_inches="tight"); plt.close(fig)
@@ -69,12 +69,12 @@ for i,(lab,code) in enumerate(TYPES):
     ax.bar(x + (i-1)*w, vals, w, color=NPG[i], edgecolor="white", linewidth=0.6, label=lab)
 for i, v in enumerate(ORDER):
     ax.text(i, len(DISP[v])*0 + max(sum(1 for r in DISP[v] if r["Type"]==c) for _,c in TYPES) + 0.35,
-            str(len(DISP[v])), ha="center", va="bottom", fontsize=12, fontweight="bold")
+            str(len(DISP[v])), ha="center", va="bottom", fontsize=20, fontweight="bold")
 ax.set_xticks(x); ax.set_xticklabels([NAME[v] for v in ORDER], rotation=45, ha="right")
-ax.set_ylabel("Number of repeats", fontsize=15)
-ax.set_ylim(0, 14)
+ax.set_ylabel("Dispersed repeats", fontsize=22)
+ax.set_ylim(0, 17.5)
 ax.legend(handles=[Patch(facecolor=NPG[i], label=l) for i,(l,_) in enumerate(TYPES)],
-          loc="upper center", bbox_to_anchor=(0.5,-0.28), ncol=3, fontsize=12, frameon=False)
+          loc="upper center", bbox_to_anchor=(0.5,1.0), ncol=3, fontsize=18, frameon=False, handlelength=1.2, columnspacing=1.0, handletextpad=0.5)
 plt.tight_layout()
 fig.savefig(f"{OUT}/Fig2D_dispersed_type.png", dpi=300, bbox_inches="tight")
 fig.savefig(f"{OUT}/Fig2D_dispersed_type.pdf", bbox_inches="tight"); plt.close(fig)
@@ -86,10 +86,10 @@ fig, ax = plt.subplots(figsize=(7.0, 6.3))
 vals = [sum(1 for L in alllen if lo <= L <= hi) for _,lo,hi in DCLS]
 ax.bar(range(len(DCLS)), vals, 0.55, color=NPG[1], edgecolor="white", linewidth=0.6)
 for i,c in enumerate(vals):
-    ax.text(i, c + max(vals)*0.015, str(c), ha="center", va="bottom", fontsize=12, fontweight="bold")
-ax.set_xticks(range(len(DCLS))); ax.set_xticklabels([f"{l} bp" for l,_,_ in DCLS])
-ax.set_xlabel("Repeat length (bp)", fontsize=15)
-ax.set_ylabel("Number of repeats", fontsize=15)
+    ax.text(i, c + max(vals)*0.015, str(c), ha="center", va="bottom", fontsize=20, fontweight="bold")
+ax.set_xticks(range(len(DCLS))); ax.set_xticklabels([l for l,_,_ in DCLS])
+ax.set_xlabel("Repeat length (bp)", fontsize=24)
+ax.set_ylabel("Dispersed repeats", fontsize=22)
 ax.set_ylim(0, max(vals)*1.14)
 plt.tight_layout()
 fig.savefig(f"{OUT}/Fig2E_dispersed_length.png", dpi=300, bbox_inches="tight")

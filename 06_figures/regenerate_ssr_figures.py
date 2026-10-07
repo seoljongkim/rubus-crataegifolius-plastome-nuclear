@@ -20,7 +20,7 @@ NAME  = {"DB":"Dabok","DS":"Daesung","DAHE":"Dongakheuk","DAHO":"Dongakhong",
          "GDC":"Geumdongcheon","GDW":"Geumdongwang","GDM":"Goldmoon","HGB":"Hwangeumboll"}
 ORDER = ["DB","DS","DAHE","DAHO","GDC","GDW","GDM","HGB"]     # 원본 그림과 동일한 알파벳 순
 
-plt.rcParams.update({"font.family":"serif", "font.size":13,
+plt.rcParams.update({"font.family":"serif", "font.size":22,
                      "axes.spines.top":False, "axes.spines.right":False})
 
 def parse(v):
@@ -39,9 +39,9 @@ for i in range(6):
     ax.bar(x, vals, 0.62, bottom=bottom, color=NPG[i], edgecolor="white", linewidth=0.6)
     bottom += vals
 for i, tot in enumerate(bottom):
-    ax.text(i, tot + 1.2, str(int(tot)), ha="center", va="bottom", fontsize=12, fontweight="bold")
+    ax.text(i, tot + 1.2, str(int(tot)), ha="center", va="bottom", fontsize=20, fontweight="bold")
 ax.set_xticks(x); ax.set_xticklabels([NAME[v] for v in ORDER], rotation=45, ha="right")
-ax.set_ylabel("Number of SSRs", fontsize=15)
+ax.set_ylabel("Number of SSRs", fontsize=24)
 ax.set_ylim(0, max(bottom) * 1.16)
 plt.tight_layout()
 fig.savefig(f"{OUT}/Fig2A_SSR_type.png", dpi=300, bbox_inches="tight")
@@ -55,11 +55,11 @@ fig, ax = plt.subplots(figsize=(6.6, 7.6))
 w, _, at = ax.pie(avg[keep], colors=[NPG[i] for i in keep], startangle=90,
                   autopct=lambda p: f"{p:.1f}%" if p >= 3 else "",
                   pctdistance=0.72, wedgeprops={"edgecolor":"white","linewidth":1.2},
-                  textprops={"fontsize":13})
+                  textprops={"fontsize":20})
 ax.axis("equal")
 handles = [Patch(facecolor=NPG[i], label=f"{LABEL[i]} ({pct[i]:.1f}%)") for i in range(6)]
 ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(0.5, 0.02),
-          ncol=3, fontsize=12, frameon=True, handlelength=1.4, columnspacing=1.2)
+          ncol=3, fontsize=19, frameon=True, handlelength=1.4, columnspacing=1.2)
 plt.tight_layout()
 fig.savefig(f"{OUT}/Fig2B_SSR_proportion.png", dpi=300, bbox_inches="tight")
 fig.savefig(f"{OUT}/Fig2B_SSR_proportion.pdf", bbox_inches="tight"); plt.close(fig)

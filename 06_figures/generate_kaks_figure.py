@@ -21,9 +21,8 @@ for l in open(f"{K}/C_coding_noncoding_rates.txt"):
     m=re.match(r"(CDS|tRNA/rRNA|noncoding)\tlength=(\d+)\tvariants=(\d+).*rate_per_kb=([\d.]+)", l)
     if m: part.append((m.group(1), int(m.group(2)), int(m.group(3)), float(m.group(4))))
 pairs=[r for r in csv.DictReader(open(f"{K}/A_intraspecific_concat_pairwise.csv")) if r["KaKs"]!="NA"]
-log=open("/tmp/claude-1000/-home-spenkim-rubus-cp/25e91ffd-94fa-47be-9f73-7b4675236d48/tasks/bbptqg5wf.output").read()
-CI={f"{m.group(1)}-{m.group(2)}":(float(m.group(4)),float(m.group(5)))
-    for m in re.finditer(r"(\w+)-(\w+)\s+Ka/Ks = ([\d.]+)\s+95% CI ([\d.]+)–([\d.]+)", log)}
+# per-pair 95% bootstrap CIs (300 codon-column resamples; values as in Supplementary Table S4)
+CI={r["pair"]:(float(r["ci_lo"]),float(r["ci_hi"])) for r in csv.DictReader(open(f"{K}/A_intraspecific_concat_ci.csv"))}
 gene={}
 for r in csv.DictReader(open(f"{K}/B_interspecific_kaks.csv")):
     if r["KaKs"]!="NA": gene.setdefault(r["species"],[]).append(float(r["KaKs"]))
@@ -40,13 +39,13 @@ rates=[p[3] for p in part]; lens=[p[1] for p in part]; nv=[p[2] for p in part]
 b=ax.bar(range(3), rates, 0.6, color=[NPG[3],NPG[2],NPG[0]], edgecolor="white", lw=.8)
 for i,(r_,n_,l_) in enumerate(zip(rates,nv,lens)):
     ax.text(i, r_+0.18, f"{r_:.2f}", ha="center", va="bottom", fontsize=11, fontweight="bold")
-    ax.text(i, -0.62, f"{n_} variants\n{l_/1000:.1f} kb", ha="center", va="top", fontsize=8.6, color="#444444")
+    ax.text(i, -0.62, f"{n_} variants\n{l_/1000:.1f} kb", ha="center", va="top", fontsize=10, color="#444444")
 ax.set_xticks(range(3)); ax.set_xticklabels(labs, fontsize=10.5)
 ax.set_ylabel("variants per kb", fontsize=11.5); ax.set_ylim(0, max(rates)*1.20)
 ax.annotate("", xy=(0,rates[0]+0.05), xytext=(2,rates[2]+0.05),
             arrowprops=dict(arrowstyle="<->", color="#666666", lw=1.0))
 ax.text(1, rates[2]*0.72, "0.23×", ha="center", fontsize=11, color="#444444")
-ax.set_title("(A)  Substitution rate by partition", loc="left", fontsize=12.5, fontweight="bold", pad=10)
+ax.set_title("(a)  Substitution rate by partition", loc="left", fontsize=12.5, fontweight="bold", pad=10)
 for s in ("top","right"): ax.spines[s].set_visible(False)
 
 # ---- (B) 품종쌍 Ka/Ks + CI ----
@@ -57,12 +56,12 @@ lo=[CI.get(r["pair"],(np.nan,np.nan))[0] for r in pairs]; hi=[CI.get(r["pair"],(
 ax.hlines(y, lo, hi, color="#BBBBBB", lw=1.6, zorder=1)
 ax.scatter(v, y, s=26, color=NPG[3], zorder=3)
 ax.axvline(1.0, color=NPG[0], ls="--", lw=1.3)
-ax.text(0.985, len(pairs)*0.55, "neutrality (Ka/Ks = 1)", color=NPG[0], fontsize=9.5,
+ax.text(0.985, len(pairs)*0.55, "neutrality (Ka/Ks = 1)", color=NPG[0], fontsize=10.5,
         rotation=90, va="center", ha="right")
-ax.set_yticks(y); ax.set_yticklabels([r["pair"] for r in pairs], fontsize=7.4)
+ax.set_yticks(y); ax.set_yticklabels([r["pair"] for r in pairs], fontsize=10)
 ax.set_xlabel("Ka/Ks (concatenated CDS)", fontsize=11.5)
 ax.set_xlim(0, 1.12); ax.set_ylim(-1, len(pairs))
-ax.set_title("(B)  Among cultivars (22 pairs)", loc="left", fontsize=12.5, fontweight="bold", pad=10)
+ax.set_title("(b)  Among cultivars (22 pairs)", loc="left", fontsize=12.5, fontweight="bold", pad=10)
 for s in ("top","right"): ax.spines[s].set_visible(False)
 ax.grid(axis="x", alpha=.22, ls=":")
 
@@ -74,12 +73,12 @@ for i,sp in enumerate(SP):
     c=conc[sp]
     ax.errorbar(i, c["point"], yerr=[[c["point"]-c["lo"]],[c["hi"]-c["point"]]], fmt="D",
                 ms=7, color="black", ecolor="black", elinewidth=1.5, capsize=5, zorder=4)
-    ax.text(i+0.20, c["point"], f"{c['point']:.3f}", fontsize=9.5, va="center")
+    ax.text(i+0.20, c["point"], f"{c['point']:.3f}", fontsize=10.5, va="center")
 ax.axhline(1.0, color=NPG[0], ls="--", lw=1.3)
-ax.text(2.42, 1.0, "Ka/Ks = 1", color=NPG[0], fontsize=9.5, va="bottom", ha="right")
+ax.text(2.42, 1.0, "Ka/Ks = 1", color=NPG[0], fontsize=10.5, va="bottom", ha="right")
 ax.set_xticks(range(3)); ax.set_xticklabels([f"$\\it{{{s.replace(' ',chr(92)+' ')}}}$\n(n = {len(gene[s])})" for s in SP], fontsize=10)
 ax.set_ylabel("Ka/Ks", fontsize=11.5); ax.set_ylim(-0.05, 1.15); ax.set_xlim(-0.5, 2.5)
-ax.set_title("(C)  Against congeners, per gene", loc="left", fontsize=12.5, fontweight="bold", pad=10)
+ax.set_title("(c)  Against congeners, per gene", loc="left", fontsize=12.5, fontweight="bold", pad=10)
 for s in ("top","right"): ax.spines[s].set_visible(False)
 ax.grid(axis="y", alpha=.22, ls=":")
 

@@ -11,7 +11,7 @@ panels = [("a", "Fig2A_SSR_type.png"), ("b", "Fig2B_SSR_proportion.png"),
           ("e", "Fig2E_dispersed_length.png")]
 ims = {k: Image.open(f"{P}/{f}").convert("RGB") for k, f in panels}
 
-PAD, LAB = 40, 96                      # 패널 간격 / 라벨 영역 높이
+PAD, LAB = 40, 200                      # 패널 간격 / 라벨 영역 높이
 def scale(im, h):
     w = int(im.width * h / im.height)
     return im.resize((w, h), Image.LANCZOS)
@@ -28,12 +28,12 @@ H = LAB + TOP_H + PAD + LAB + BOT_H
 
 canvas = Image.new("RGB", (W, H), "white")
 d = ImageDraw.Draw(canvas)
-font = ImageFont.truetype(FONT, 72)
+font = ImageFont.truetype(FONT, 150)
 
 def row(imgs, keys, y0, x0):
     x = x0
     for im, k in zip(imgs, keys):
-        d.text((x, y0 - LAB + 14), f"({k})", font=font, fill=(0, 0, 0))
+        d.text((x, y0 - LAB + 20), f"({k})", font=font, fill=(0, 0, 0))
         canvas.paste(im, (x, y0))
         x += im.width + PAD
 
