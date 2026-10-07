@@ -11,7 +11,8 @@ panels = [("a", "Fig2A_SSR_type.png"), ("b", "Fig2B_SSR_proportion.png"),
           ("e", "Fig2E_dispersed_length.png")]
 ims = {k: Image.open(f"{P}/{f}").convert("RGB") for k, f in panels}
 
-PAD, LAB = 40, 200                      # 패널 간격 / 라벨 영역 높이
+PAD, LAB = 40, 200
+PAD_TOP = 320                          # (a)–(b) 사이 간격                      # 패널 간격 / 라벨 영역 높이
 def scale(im, h):
     w = int(im.width * h / im.height)
     return im.resize((w, h), Image.LANCZOS)
@@ -21,7 +22,7 @@ BOT_H = 1350                           # 하단 행 높이
 top = [scale(ims["a"], TOP_H), scale(ims["b"], TOP_H)]
 bot = [scale(ims[k], BOT_H) for k in "cde"]
 
-tw = sum(i.width for i in top) + PAD
+tw = sum(i.width for i in top) + PAD_TOP
 bw = sum(i.width for i in bot) + PAD * 2
 W = max(tw, bw)
 H = LAB + TOP_H + PAD + LAB + BOT_H
@@ -30,14 +31,14 @@ canvas = Image.new("RGB", (W, H), "white")
 d = ImageDraw.Draw(canvas)
 font = ImageFont.truetype(FONT, 150)
 
-def row(imgs, keys, y0, x0):
+def row(imgs, keys, y0, x0, pad=PAD):
     x = x0
     for im, k in zip(imgs, keys):
         d.text((x, y0 - LAB + 20), f"({k})", font=font, fill=(0, 0, 0))
         canvas.paste(im, (x, y0))
-        x += im.width + PAD
+        x += im.width + pad
 
-row(top, "ab", LAB, (W - tw) // 2)
+row(top, "ab", LAB, (W - tw) // 2, pad=PAD_TOP)
 row(bot, "cde", LAB + TOP_H + PAD + LAB, (W - bw) // 2)
 
 canvas.save(f"{P}/Fig2_repeat_elements.png", dpi=(300, 300))
