@@ -504,6 +504,14 @@ def fig6_variant():
     pi = [private_vars[v]['InDels'] for v in VARIETIES]
     ax2.bar(x2 - w2/2, ps, w2, label='Private SNPs', color=COLORS['SNP'])
     ax2.bar(x2 + w2/2, pi, w2, label='Private InDels', color=COLORS['InDel'])
+    ymax2 = max(max(ps), max(pi))
+    for xi, (a, b) in enumerate(zip(ps, pi)):
+        if a == 0 and b == 0:
+            ax2.text(xi, ymax2 * 0.02, '0', ha='center', va='bottom', fontsize=11, fontweight='bold', color='#444444')
+        else:
+            ax2.text(xi - w2/2, a + ymax2 * 0.02, str(a), ha='center', va='bottom', fontsize=10, color=COLORS['SNP'])
+            ax2.text(xi + w2/2, b + ymax2 * 0.02, str(b), ha='center', va='bottom', fontsize=10, color=COLORS['InDel'])
+    ax2.set_ylim(0, ymax2 * 1.15)
     ax2.set_xticks(x2)
     ax2.set_xticklabels([CULTIVAR[v] for v in VARIETIES], rotation=45, ha='right', fontsize=12)
     ax2.set_ylabel('Number of private variants', fontsize=14)
