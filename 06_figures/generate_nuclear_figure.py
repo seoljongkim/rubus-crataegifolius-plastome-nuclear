@@ -63,7 +63,7 @@ ax=fig.add_subplot(gs[1])
 iu=np.triu_indices(8,1); x=cp[iu]; y=nuc[iu]
 same=x==0
 ax.scatter(x[~same],y[~same],s=62,color=NPG[3],alpha=.82,edgecolor="white",lw=.8,
-           label="cp-divergent pairs",zorder=3)
+           label="different cp genomes",zorder=3)
 ax.scatter(x[same],y[same],s=110,color=NPG[0],edgecolor="black",lw=1.0,marker="D",
            label="identical cp genomes (0 SNPs)",zorder=4)
 # cp 동일 쌍 주석: 풀네임이라 라벨이 길어져, 거리순으로 위·아래 번갈아 배치해 겹침을 피한다
@@ -81,7 +81,7 @@ for _ in range(_N):
 p=(_c+1)/(_N+1)   # Mantel 순열검정 (쌍별 거리의 비독립성 보정)
 ax.set_xlabel("chloroplast pairwise SNPs",fontsize=13)
 ax.set_ylabel("nuclear 1–IBS distance",fontsize=13)
-ax.set_title("(b)  Chloroplast vs nuclear divergence",loc="left",fontsize=14.5,fontweight="bold",pad=12)
+ax.set_title("(b)  Chloroplast vs. nuclear divergence",loc="left",fontsize=14.5,fontweight="bold",pad=12)
 ax.text(.975,.50,f"Mantel ρ = {rho:.2f}\nP = {p:.3f}\n99,999 permutations",transform=ax.transAxes,
         ha="right",va="center",fontsize=12,
         bbox=dict(boxstyle="round,pad=0.42",fc="white",ec="#BBBBBB"))

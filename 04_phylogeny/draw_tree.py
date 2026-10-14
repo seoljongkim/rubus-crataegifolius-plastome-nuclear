@@ -55,6 +55,8 @@ for txt in ax.texts:
         x, y = txt.get_position()
         txt.set_position((x, y)); txt.set_ha("right"); txt.set_va("bottom")
         txt.set_fontsize(7.6); txt.set_color("#333333")
+        # white backing so that support values are not crossed by branch lines (Genes proof)
+        txt.set_bbox(dict(facecolor="white", edgecolor="none", pad=0.6)); txt.set_zorder(6)
 # 내군 줄기(0 → 0.008 구간의 수평선)를 찾아 그 위에 절단 표시
 stem_y = None
 segs = []
