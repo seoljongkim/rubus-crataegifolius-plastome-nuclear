@@ -1,0 +1,16 @@
+{
+  "title": "Analysis code: Discordant chloroplast and nuclear divergence among eight Rubus crataegifolius (Rosaceae) cultivars",
+  "description": "Scripts for plastome standardization and annotation, variant detection, repeat and codon-usage analysis, Ka/Ks selection-pressure analysis, phylogenetic tree figures, nuclear read mapping and SNP calling, heterozygosity QC, diagnostic marker-panel selection, and figure generation. Code only; input data are not included. Accompanies the article published in Genes (MDPI), manuscript genes-4625184.",
+  "creators": [
+    {"name": "Kim, Seol-Jong", "affiliation": "National Forest Seed Variety Center (NFSV), Korea Forest Service, Chungju, Republic of Korea"},
+    {"name": "Kim, Yoon-Young", "affiliation": "National Forest Seed Variety Center (NFSV), Korea Forest Service, Chungju, Republic of Korea"},
+    {"name": "Kwon, Soon-Ho", "affiliation": "National Institute of Forest Science (NIFoS), Suwon, Republic of Korea"}
+  ],
+  "license": "MIT",
+  "upload_type": "software",
+  "access_right": "open",
+  "keywords": ["Rubus crataegifolius", "plastome", "chloroplast genome", "nuclear SNP", "cultivar identification", "cytonuclear discordance"],
+  "related_identifiers": [
+    {"identifier": "https://github.com/seoljongkim/rubus-crataegifolius-plastome-nuclear", "relation": "isSupplementTo", "scheme": "url"}
+  ]
+}
