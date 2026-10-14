@@ -54,7 +54,7 @@ must be run from inside `home_wsl_package/nuclear_snp/results/`.
 
 Trimmomatic (`ILLUMINACLIP:TruSeq3-PE.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:36`),
 GetOrganelle v1.7.7.1, GeSeq, MISA, Tandem Repeats Finder v4.10, BLAST+ v2.17.0, MAFFT v7,
-IQ-TREE v3.0.1, bwa-mem2 v2.2.1, SAMtools v1.24, BCFtools v1.24, PLINK v1.90 and v2.00,
+IQ-TREE v3.0.1, bwa-mem2 v2.3, SAMtools v1.24, BCFtools v1.24, PLINK v1.90 and v2.00,
 Biopython v1.86, SciPy.
 
 ## Notes on reproducing the nuclear analysis
@@ -74,3 +74,11 @@ Biopython v1.86, SciPy.
   missing genotype); `09_panel_strict_check.py` re-checks the marker panel against that set. RcNu-04 of
   the original submission failed the check and was replaced by OZ232403.1:12,029,618 (same genotype
   pattern); `06_marker_selection.py` therefore reproduces the original panel, not the revised one.
+
+## Citation and archive
+
+Archived release: **v1.0.0**, Zenodo DOI [10.5281/zenodo.23364695](https://doi.org/10.5281/zenodo.23364695)
+(concept DOI for all versions: 10.5281/zenodo.23364694). Code is released under the MIT License.
+
+Kim, S.-J.; Kim, Y.-Y.; Kwon, S.-H. Analysis code: Discordant chloroplast and nuclear divergence among eight
+*Rubus crataegifolius* (Rosaceae) cultivars. Zenodo, 2026. https://doi.org/10.5281/zenodo.23364695
