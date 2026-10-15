@@ -1,7 +1,7 @@
 # Analysis code — *Rubus crataegifolius* plastome and nuclear resequencing
 
 Code accompanying **"Discordant chloroplast and nuclear divergence among eight *Rubus crataegifolius*
-(Rosaceae) cultivars."**
+(Rosaceae) cultivars."** *Genes* **2026**, *17*(10), 1287. https://doi.org/10.3390/genes17101287
 
 Eight cultivars were sequenced on Illumina NovaSeq 6000 (151 bp paired-end, 19.9–23.8 M read pairs each).
 Plastomes: GenBank **PZ143672–PZ143679**. Raw sequencing reads are available from the corresponding
@@ -79,6 +79,13 @@ Biopython v1.86, SciPy.
 
 Archived release: **v1.0.0**, Zenodo DOI [10.5281/zenodo.23364695](https://doi.org/10.5281/zenodo.23364695)
 (concept DOI for all versions: 10.5281/zenodo.23364694). Code is released under the MIT License.
+
+Article:
+
+Kim, S.-J.; Kim, Y.-Y.; Kwon, S.-H. Discordant Chloroplast and Nuclear Divergence Among Eight *Rubus crataegifolius*
+(Rosaceae) Cultivars. *Genes* **2026**, *17*, 1287. https://doi.org/10.3390/genes17101287
+
+Code:
 
 Kim, S.-J.; Kim, Y.-Y.; Kwon, S.-H. Analysis code: Discordant chloroplast and nuclear divergence among eight
 *Rubus crataegifolius* (Rosaceae) cultivars. Zenodo, 2026. https://doi.org/10.5281/zenodo.23364695
